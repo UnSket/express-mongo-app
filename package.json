@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "startdb": "../mongodb/bin/mongod --dbpath=../db --bind_ip 127.0.0.1"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
