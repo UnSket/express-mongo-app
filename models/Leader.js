@@ -30,6 +30,6 @@ const leadersSchema = new Schema({
     timestamps: true
 });
 
-const Leaders = mongoose.model('Leader', leadersSchema);
+const Leader = mongoose.model('Leader', leadersSchema);
 
-module.exports = Leaders;
+module.exports = Leader;

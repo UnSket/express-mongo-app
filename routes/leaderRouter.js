@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
-const Leaders = require('../models/leaders');
+const Leaders = require('../models/Leader');
 
 const leaderRouter = express.Router();
 

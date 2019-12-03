@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
-const Dishes = require('../models/dishes');
+const Dishes = require('../models/Dish');
 
 const dishRouter = express.Router();
 

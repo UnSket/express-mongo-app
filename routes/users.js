@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const passport = require('passport');
 
-const User = require('../models/users');
+const User = require('../models/User');
 
 router.use(bodyParser.json());
 
@@ -12,45 +13,18 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/signup', (req, res, next) => {
-  User.create({
-    username: req.body.username,
-    password: req.body.password
-  }).then(user => {
-    res.json(user)
-  }).catch(error => next(error))
+  User.register(new User({username: req.body.username}), req.body.password, (err, body) => {
+    if (err) {
+      return next(err);
+    }
+    passport.authenticate('local')(req, res, () => {
+      res.json({success: true, status: 'Registration Successful!'});
+    });
+  })
 });
 
-router.post('/login', (req, res, next) => {
-  if(!req.session.user) {
-    const authHeader = req.headers.authorization;
-
-    if(!authHeader) {
-      res.statusCode = 401;
-      res.end('You are not logged in');
-    }
-
-    const auth = new Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
-    const username = auth[0];
-    const password = auth[1];
-
-    User.findOne({username: username})
-        .then((user) => {
-          if (user === null) {
-            const err = new Error('User ' + username + ' does not exist!');
-            err.status = 403;
-            return next(err);
-          }
-          else if (user.password !== password) {
-            const err = new Error('Your password is incorrect!');
-            err.status = 403;
-            return next(err);
-          }
-          else if (user.username === username && user.password === password) {
-            req.session.user = 'authenticated';
-            res.end('You are authenticated!')
-          }
-        })
-  }
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  res.json({success: true, status: 'You are successfully logged in!'});
 });
 
 router.get('/logout', (req, res) => {
