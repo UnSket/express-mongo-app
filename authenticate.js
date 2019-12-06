@@ -36,4 +36,14 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 passport.use(new LocalStrategy(User.authenticate()));
 
+const verifyAdmin = (req, res, next) => {
+    if (req.user.admin) {
+        return next();
+    } else {
+        res.statusCode = 403;
+        res.end('Not allowed!');
+    }
+};
+
 exports.verifyUser = passport.authenticate('jwt', {session: false});
+exports.verifyAdmin = verifyAdmin;

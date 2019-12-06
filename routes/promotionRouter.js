@@ -16,16 +16,16 @@ promotionRouter.route('/')
             .then(promotions => res.json(promotions))
             .catch(next);
     })
-    .post(authenticate.verifyUser, (req, res, next) => {
+    .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Promotion.create(req.body)
             .then(promotion => res.json(promotion))
             .catch(next)
     })
-    .put(authenticate.verifyUser, (req, res, next) => {
+    .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         res.statusCode = 403;
         res.end('PUT operation not supported on /promotions');
     })
-    .delete(authenticate.verifyUser, (req, res, next) => {
+    .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Promotion.remove({})
             .then(dbResponse => res.json(dbResponse))
             .catch(next)
@@ -37,17 +37,17 @@ promotionRouter.route('/:promotionId')
             .then(promotion => res.json(promotion))
             .catch(next)
     })
-    .post(authenticate.verifyUser, (req, res, next) => {
+    .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         res.statusCode = 403;
         res.end('POST operation not supported on /promotiones/'+ req.params.promotionId);
     })
-    .put(authenticate.verifyUser, (req, res, next) => {
+    .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         console.log(JSON.stringify(req.params), JSON.stringify(req.body));
         Promotion.findByIdAndUpdate(req.params.promotionId, {$set: req.body}, {new: true})
             .then(promotion => res.json(promotion), e => console.error(e))
             .catch(next)
     })
-    .delete(authenticate.verifyUser, (req, res, next) => {
+    .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Promotion.findByIdAndDelete(req.params.promotionId)
             .then(promotion => res.json(promotion))
             .catch(next)
